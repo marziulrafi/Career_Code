@@ -1,8 +1,12 @@
 import Lottie from 'lottie-react';
-import React from 'react';
+import React, { use } from 'react';
 import RegisterLottie from '../../src/assets/register.json'
+import { AuthContext } from '../providers/AuthContext';
+import { Link } from 'react-router';
 
 const Register = () => {
+
+    const {createUser} = use(AuthContext)
 
     const handleRegister = e => {
         e.preventDefault()
@@ -11,6 +15,16 @@ const Register = () => {
         const email = form.email.value
         const password = form.password.value
         console.log(email, password);
+
+        createUser(email, password)
+        .then(result => {
+            console.log(result.user);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+
+
     }
 
     return (
@@ -22,14 +36,16 @@ const Register = () => {
                 </div>
                 <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
                     <div className="card-body">
-                        <h1 className="text-5xl font-bold">Register now!</h1>
+                        <h1 className="text-3xl text-center mb-4 font-bold">Register now!</h1>
                         <form onSubmit={handleRegister}>
                             <fieldset className="fieldset">
+                                <label className="label">Name</label>
+                                <input type="text" name='name' className="input" placeholder="Name" />
                                 <label className="label">Email</label>
                                 <input type="email" name='email' className="input" placeholder="Email" />
                                 <label className="label">Password</label>
                                 <input type="password" name='password' className="input" placeholder="Password" />
-                                <div><a className="link link-hover">Forgot password?</a></div>
+                                <div><p>Already have an account? <Link to='/login' className='cursor-pointer underline text-blue-700 font-semibold'>Login Here</Link></p></div>
                                 <button className="btn btn-neutral mt-4">Register</button>
                             </fieldset>
                         </form>

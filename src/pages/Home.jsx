@@ -3,6 +3,7 @@ import { motion } from "motion/react"
 import Team1 from '../../src/assets/team1.jpg'
 import Team2 from '../../src/assets/team2.jpg'
 import HotJobs from './HotJobs';
+import Loading from '../components/Loading';
 
 
 const jobsPromise = fetch('http://localhost:3000/jobs')
@@ -59,7 +60,7 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-            <Suspense fallback={'Loading . . . .'}>
+            <Suspense fallback={<Loading />}>
                 <HotJobs jobsPromise={jobsPromise}></HotJobs>
             </Suspense>
         </div>

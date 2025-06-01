@@ -1,8 +1,10 @@
 import React from 'react';
 import useAuth from '../hooks/useAuth';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 const AddJob = () => {
 
-    const {user} = useAuth()
+    const { user } = useAuth()
 
     const handleAddJob = e => {
         e.preventDefault()
@@ -11,25 +13,41 @@ const AddJob = () => {
         const formData = new FormData(form)
         const data = Object.fromEntries(formData.entries())
 
-        // console.log(data);
+        const { min, max, currency, ...newJob } = data
+        newJob.salaryRange = { min, max, currency }
 
-
-        const {min, max, currency, ...newJob} = data
-        newJob.salaryRange = {min, max, currency}
-
-
-
-        newJob.requirements = newJob.requirements.split()
-
-
+        newJob.status = 'active'
         console.log(newJob);
+
+
+
+        // Jobs into database
+
+        axios.post('http://localhost:3000/jobs', newJob)
+            .then(res => {
+                if (res.data.insertedId) {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "New Job has been published!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 
 
     return (
         <div>
             <h2>Add a Job</h2>
+
             <form onSubmit={handleAddJob}>
+
+
                 <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
                     <legend className="fieldset-legend">Basic Info</legend>
 
@@ -71,7 +89,7 @@ const AddJob = () => {
                 <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
                     <legend className="fieldset-legend">Application Deadline</legend>
 
-                    <input type="datetime-local" className="input" />
+                    <input type="datetime-local" name='deadline' className="input" />
 
                 </fieldset>
 
@@ -127,7 +145,7 @@ const AddJob = () => {
 
                     <label className="label">HR Email</label>
                     <input type="email" name='hr_email' className="input" defaultValue={user.email} readOnly placeholder="HR Email" />
-                  
+
                 </fieldset>
 
                 <input type="submit" className='btn' value="Add Job" />

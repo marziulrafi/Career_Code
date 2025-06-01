@@ -29,6 +29,7 @@ const JobCard = ({ job }) => {
                 <p className='font-semibold'>Salary : {salaryRange.min} - {salaryRange.max} BDT.</p>
                 <div className="card-actions mb-2">
                     {
+                        Array.isArray(requirements) &&
                         requirements.map((skill, index) =>
                             <div key={index} className="badge badge-outline">{skill}</div>
                         )
